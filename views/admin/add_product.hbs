@@ -1,0 +1,34 @@
+<section>
+
+    <div class="row">
+
+        <h2 class="text-center">Enter Product Details</h2>
+    <div class="col-md-6 m-5 ml-5">
+    <form action="/admin/add_product" method="post" enctype="multipart/form-data">
+        <div >
+            <label for="Name">Name</label>
+            <input type="text" name="Name" value="" class="form-control">
+        </div>
+        <div >
+            <label for="Category">Category</label>
+            <input type="text" name="Category" value="" class="form-control">
+        </div>
+        <div >
+            <label for="Price">Price</label>
+            <input type="number" name="Price" value="" class="form-control">
+        </div>
+        <div >
+            <label for="Description">Description</label>
+            <input type="text" name="Description" value="" class="form-control">
+        </div>
+        <div >
+            <label for="Image">Image</label>
+            <input type="file" name="Image" class="form-control">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-info mt-4">Add</button>
+        </div>
+    </form>
+    </div>
+    </div>
+</section>
