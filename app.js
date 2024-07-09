@@ -31,6 +31,11 @@ db.connect((err)=>{
   if(err) console.log("err"+err)
     else console.log("Database Connected")})
 
+///image
+process.env.PWD = process.cwd()
+app.use(express.static(process.env.PWD+'/public/product_image'))
+
+
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
 
