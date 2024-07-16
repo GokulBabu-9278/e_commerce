@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var productHelper = require('../helpers/product_helpers')
+const userHelper = require('../helpers/user_helpers')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,7 +19,9 @@ router.get('/signup', (req,res)=>{
   res.render('user/signup')
 })
 router.post('/signup', (req,res)=>{
-  
+  userHelper.doSignup(req.body).then((response)=>{
+    console.log(response)
+  })
   console.log(req.body)
   res.render('user/login')
 })
