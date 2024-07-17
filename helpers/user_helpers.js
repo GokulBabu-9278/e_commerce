@@ -23,8 +23,7 @@ module.exports = {
                         response.user = user
                         response.status = true
                         resolve(response)
-                    }
-                    else{
+                    }else{
                         console.log('login failed');
                         resolve({status:false})
                     }
