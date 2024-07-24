@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 const productHelper = require('../helpers/product_helpers')
-const userHelper = require('../helpers/user_helpers')
+const userHelper = require('../helpers/user_helpers');
+const { USER_COLLECTION } = require('../config/collections');
 const verifyLogin = (req, res, next)=>{
   if(req.session.loggedIn){
     next()
@@ -11,15 +12,18 @@ const verifyLogin = (req, res, next)=>{
   }
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
 
-  //login session
+  //login session checking
   let user = req.session.user
-  console.log(user)
-
+  //console.log(user)
+  let cartCount = null
+  if(req.session.user){
+    cartCount = await userHelper.getCartCount(req.session.user._id)
+  }
   productHelper.getAllProducts().then((products)=>{
     //console.log(products)
-    res.render('user/user_view_products', {admin:false, products, user})
+    res.render('user/user_view_products', {products, user, cartCount})
   })
 })
 
@@ -37,6 +41,9 @@ router.get('/signup', (req, res)=>{
 router.post('/signup', (req, res)=>{
   userHelper.doSignup(req.body).then((response)=>{
     console.log(response)
+    req.session.loggedIn = true
+    req.session.user = response
+    res.redirect('/')
   })
   res.render('user/login')
 })
@@ -56,7 +63,15 @@ router.get('/logout', (req, res)=>{
   req.session.destroy()
   res.redirect('/')
 })
-router.get('/cart', verifyLogin, (req, res)=>{
-  res.render('user/cart')
+router.get('/cart', verifyLogin, async(req, res)=>{
+  let products = await userHelper.getCartProducts(req.session.user._id)
+  console.log(products)
+  res.render('user/cart', {products, user:req.session.user})
+})
+router.get('/add_tocart/:id', (req, res)=>{
+  console.log("api call")
+  userHelper.addToCart(req.params.id, req.session.user._id).then(()=>{
+    res.json({status:true})
+  })
 })
 module.exports = router;
