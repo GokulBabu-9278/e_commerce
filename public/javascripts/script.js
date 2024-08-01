@@ -6,8 +6,9 @@ function addToCart(proId){
             if(response.status){
                 let count = $('#cart_count').html()
                 count = parseInt(count)+1
-                $('#cart_count').html(count)
+                $("#cart_count").html(count)
             }
+            location.reload()
         }
     })
 }
