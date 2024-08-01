@@ -14,12 +14,14 @@
   <tbody>
     {{#each products}}
     <tr>
-      {{#each this.product}}
-      <td><img src="/product_image/{{this._id}}.jpg" alt="" style="width: 50px; height: auto;"></td>
-      <td>{{this.Name}}</td>
-      {{/each}}
+      
+      <td><img src="/product_image/{{this.product._id}}.jpg" alt="" style="width: 50px; height: auto;"></td>
+      <td>{{this.product.Name}}</td>
+    
       <td>
-        <button class="btn btn-info btn-sm mr-3">-</button>{{this.quantity}}<button class="btn btn-info btn-sm ml-3">+</button>
+        <button class="btn btn-info btn-sm mr-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+        <span id="{{this.product._id}}">{{this.quantity}}</span> 
+        <button class="btn btn-info btn-sm ml-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
       </td>
       <td>
         <a href="" class="btn btn-danger">Remove</a>
@@ -32,3 +34,7 @@
 
 </div>
 </section>
+
+<script>
+
+</script>
