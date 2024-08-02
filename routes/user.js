@@ -75,7 +75,7 @@ router.get('/add_tocart/:id', (req, res)=>{
   })
 })
 router.post('/change_product_quantity', (req, res, next)=>{
-  console.log(req.body)
+  //console.log(req.body)
   userHelper.changeProdQuan(req.body).then((response)=>{
     res.json(response)
   })

@@ -29,7 +29,7 @@ function changeQuantity(cartId, proId, count){
         alert("product Removed")
         location.reload()
        }else{
-        document.getElementById(proId).innerHTML = quantity.count
+        document.getElementById(proId).innerHTML = quantity+count
         location.reload()
         }
       }
