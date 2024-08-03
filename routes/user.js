@@ -80,4 +80,8 @@ router.post('/change_product_quantity', (req, res, next)=>{
     res.json(response)
   })
 })
+router.get('/place_order', verifyLogin, async(req, res)=>{
+  let total = await userHelper.getTotalAmount(req.session.user._id)
+  res.render('user/place_order', {total})
+})
 module.exports = router;
