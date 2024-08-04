@@ -21,9 +21,9 @@
       <td>₹{{this.product.Price}}</td>
     
       <td>
-        <button class="btn btn-info btn-sm mr-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+        <button class="btn btn-info btn-sm mr-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}', -1)">-</button>
         <span id="{{this.product._id}}">{{this.quantity}}</span> 
-        <button class="btn btn-info btn-sm ml-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+        <button class="btn btn-info btn-sm ml-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}', 1)">+</button>
       </td>
       <td>
         <a href="" class="btn btn-danger">Remove</a>
@@ -35,7 +35,7 @@
 </table>
 <hr>
 <div class="float-end pr-5">
-  <h5 class="float-end mr-5">Total: Rs. 100000</h5><br>
+  <h5 class="float-end mr-5">Total: Rs. <span id="total">{{totalAmount}}</span></h5><br>
   <a href="/place_order" class="btn btn-success mt-3" style="width: 100%;"><b>Checkout</b></a>
 </div>  
 </div>
