@@ -38,3 +38,14 @@ function changeQuantity(cartId, proId, userId, count){
       }
     })
   }
+  $("#checkout_form").submit((e)=>{
+    e.preventDefault()
+        $.ajax({
+            url:'/place_order',
+            method:'post',
+            data:$('#checkout_form').serialize(),
+            success:(response)=>{
+              alert(response)
+            }
+        })
+    })

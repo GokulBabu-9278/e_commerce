@@ -85,6 +85,14 @@ router.post('/change_product_quantity', (req, res, next)=>{
 })
 router.get('/place_order', verifyLogin, async(req, res)=>{
   let total = await userHelper.getTotalAmount(req.session.user._id)
-  res.render('user/place_order', {total})
+  res.render('user/place_order', {total, user:req.session.user})
+})
+router.post('/place_order', async(req, res)=>{
+  let prodList = await userHelper.getCartProductlist(req.body.userId)
+  let totalPrice = await userHelper.getTotalAmount(req.body.userId)
+  userHelper.placeOrder(req.body, prodList, totalPrice).then((response)=>{
+    res.json({status:true})
+  })
+  //console.log(req.body)
 })
 module.exports = router;

@@ -114,5 +114,35 @@ module.exports = {
             //console.log(total[0].total)
             resolve(total[0].total)
         }) 
+    },
+    placeOrder:(order, prodList, totalPrice)=>{
+        return new Promise((resolve, reject)=>{
+            //console.log(order, prodList, totalPrice)
+            let status = order['payment_method'] === 'COD'?'placed':'pending'
+            let orderObj = {
+                deliveryDetails:{
+                    mobile:order.mobile, 
+                    address:order.address, 
+                    pincode:order.pincode
+                },
+                userId:objectId(order.userId),
+                paymentMethod:order['payment_method'],
+                product:prodList,
+                Amount:totalPrice,
+                status:status
+            }
+            //console.log(orderObj)
+            db.get().collection(collection.ORD_COL).insertOne(orderObj).then((response)=>{
+                db.get().collection(collection.CART_COL).deleteOne({user:objectId(order.userId)})
+                resolve()
+            })
+        })
+    },
+    getCartProductlist:(userId)=>{
+        return new Promise(async(resolve, reject)=>{
+            let cart = await db.get().collection(collection.CART_COL).findOne({user:objectId(userId)})
+                //console.log(cart)
+                resolve(cart.products)
+        })
     }
 }
