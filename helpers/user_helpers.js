@@ -143,7 +143,8 @@ module.exports = {
         return new Promise(async(resolve, reject)=>{
             let cart = await db.get().collection(collection.CART_COL).findOne({user:objectId(userId)})
                 //console.log(cart)
-                resolve(cart.products)
+                if(cart && cart.length > 0 && cart.products){resolve(cart.products)}
+                else{resolve()}
         })
     }
 }

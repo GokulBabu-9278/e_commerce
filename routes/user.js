@@ -90,7 +90,7 @@ router.get('/place_order', verifyLogin, async(req, res)=>{
 router.post('/place_order', async(req, res)=>{
   let prodList = await userHelper.getCartProductlist(req.body.userId)
   let totalPrice = await userHelper.getTotalAmount(req.body.userId)
-  userHelper.placeOrder(req.body, prodList, totalPrice).then((response)=>{
+  userHelper.placeOrder(req.body, prodList, totalPrice).then(()=>{
     res.json({status:true})
   })
 })
