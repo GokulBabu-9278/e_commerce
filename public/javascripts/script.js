@@ -45,7 +45,9 @@ function changeQuantity(cartId, proId, userId, count){
             method:'post',
             data:$('#checkout_form').serialize(),
             success:(response)=>{
-              alert(response)
+              if(response.status){
+                location.href = '/order_sts'
+              }
             }
         })
     })

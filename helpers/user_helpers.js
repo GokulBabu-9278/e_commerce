@@ -112,7 +112,8 @@ module.exports = {
                 {$group:{_id:null, total:{$sum:{$multiply:['$quantity', {$toInt:'$product.Price'}]}}}}
             ]).toArray()
             //console.log(total[0].total)
-            resolve(total[0].total)
+            if(total && total.length > 0 && total[0].total){resolve(total[0].total)}
+            else{resolve(0)}
         }) 
     },
     placeOrder:(order, prodList, totalPrice)=>{

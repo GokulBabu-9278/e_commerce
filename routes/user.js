@@ -93,6 +93,8 @@ router.post('/place_order', async(req, res)=>{
   userHelper.placeOrder(req.body, prodList, totalPrice).then((response)=>{
     res.json({status:true})
   })
-  //console.log(req.body)
+})
+router.get('/order_sts', (req, res)=>{
+  res.render('user/order_sts')
 })
 module.exports = router;
