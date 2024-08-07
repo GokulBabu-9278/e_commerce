@@ -1,0 +1,23 @@
+<section>
+  <p>connect</p>
+    <div class="container mt-5">
+        <div class="row">
+
+<div class="col-md-3 p-3">
+{{#each products}}
+<div class="card" style="width: 15rem;height:24rem;" >
+  <img src="/product_image/{{this.product._id}}.jpg" 
+  class="card-img-top" style="height: 12rem;">
+  <div class="card-body">
+    <h5 class="card-title">connect{{this.product.Name}}</h5>
+    <p class="card-text">Rs:{{this.product.Price}}</p>
+    {{!-- <p class="card-text">Quantity:{{this.quantity}}</p> --}}
+    {{!-- <p class="card-text">{{this.Description}}</p> --}}
+  </div>
+</div>
+{{/each}}  
+</div>  
+
+        </div>
+    </div>
+</section>

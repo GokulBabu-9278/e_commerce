@@ -130,7 +130,8 @@ module.exports = {
                 paymentMethod:order['payment_method'],
                 product:prodList,
                 Amount:totalPrice,
-                status:status
+                status:status,
+                date:new Date()
             }
             //console.log(orderObj)
             db.get().collection(collection.ORD_COL).insertOne(orderObj).then((response)=>{
@@ -145,6 +146,26 @@ module.exports = {
                 //console.log(cart)
                 if(cart && cart.length > 0 && cart.products){resolve(cart.products)}
                 else{resolve()}
+        })
+    },
+    getUserOrd:(userId)=>{
+        return new Promise(async(resolve, reject)=>{
+            let orders = await db.get().collection(collection.ORD_COL)
+            .find({userId:objectId(userId)})
+            .toArray()
+            resolve(orders)
+        })
+    },
+    getOrdProd:(orderId)=>{
+        return new Promise(async(resolve, reject)=>{
+            let orderItems = await db.get().collection(collection.ORD_COL).aggregate([
+                {$match:{_id:objectId(orderId)}},
+                {$unwind:'$products'},
+                {$project:{item:'$products.item', quantity:'$products.quantity'}},
+                {$lookup:{from:collection.PRODUCT_COLLECTION, localField:'item', foreignField:'_id', as:'product'}},
+                {$project:{item:1, quantity:1, product:{$arrayElemAt:['$product',0]}}}
+            ]).toArray()
+            resolve(orderItems)
         })
     }
 }
