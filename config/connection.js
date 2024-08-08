@@ -18,3 +18,17 @@ module.exports.get = function(){
 
 // npm i mongodb@3.6.2 
 // npm i mongodb@4.6.0  preferd
+
+const { MongoClient } = require('mongodb')
+const url = 'mongodb://localhost:27017/'
+const client = new MongoClient(url)
+const dbname = 'shopping'
+
+module.exports.connect = async function(){
+    await client.connect()
+    console.log('connect to server')
+    state.db = client.db(dbname)
+}
+module.exports.get = function(){
+    return state.db
+}

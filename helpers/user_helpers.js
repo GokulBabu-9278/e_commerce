@@ -2,7 +2,7 @@ var db = require('../config/connection')
 var collection = require('../config/collections')
 const bcrypt = require('bcrypt')
 const { response } = require('express')
-const objectId = require('mongodb').ObjectId
+const { ObjectId } = require('mongodb')
 const Razorpay = require('razorpay')
 
 var instance = new Razorpay({
@@ -44,27 +44,27 @@ module.exports = {
     },
     addToCart:(proId, userId)=>{
         let proObj={
-            item:objectId(proId),
+            item:new ObjectId(proId),
             quantity:1
         }
         return new Promise(async(resolve, reject)=>{
-           let userCart = await db.get().collection(collection.CART_COL).findOne({user:objectId(userId)})
+           let userCart = await db.get().collection(collection.CART_COL).findOne({user:new ObjectId(userId)})
            if(userCart){
                 let proExist = userCart.products.findIndex(product=> product.item == proId)
                 console.log(proExist)
                 if(proExist !=-1){
                     db.get().collection(collection.CART_COL)
-                    .updateOne({user:objectId(userId), 'products.item':objectId(proId)},
+                    .updateOne({user:new ObjectId(userId), 'products.item':new ObjectId(proId)},
                     {$inc:{'products.$.quantity':1}})
                     .then(()=>{resolve()})
                 }else{
                     db.get().collection(collection.CART_COL)
-                        .updateOne({user:objectId(userId)},
+                        .updateOne({user:new ObjectId(userId)},
                         {$push:{products:proObj}})
                         .then((response)=>{resolve()})
                     }
             }else{
-                let cartObj = {user:objectId(userId),products:[proObj]}
+                let cartObj = {user:new ObjectId(userId),products:[proObj]}
                 db.get().collection(collection.CART_COL).insertOne(cartObj)
                 .then((response)=>{resolve()})
             }
@@ -73,7 +73,7 @@ module.exports = {
     getCartProducts:(userId)=>{
         return new Promise(async(resolve, reject)=>{
             let cartItems = await db.get().collection(collection.CART_COL).aggregate([
-                {$match:{user:objectId(userId)}},
+                {$match:{user:new ObjectId(userId)}},
                 {$unwind:'$products'},
                 {$project:{item:'$products.item', quantity:'$products.quantity'}},
                 {$lookup:{from:collection.PRODUCT_COLLECTION, localField:'item', foreignField:'_id', as:'product'}},
@@ -85,7 +85,7 @@ module.exports = {
     getCartCount:(userId)=>{
         return new Promise(async(resolve, reject)=>{
             let count = 0
-            let cart = await db.get().collection(collection.CART_COL).findOne({user:objectId(userId)})
+            let cart = await db.get().collection(collection.CART_COL).findOne({user:new ObjectId(userId)})
             if(cart){count = cart.products.length}
             resolve(count)
         })
@@ -96,12 +96,12 @@ module.exports = {
         return new Promise(async(resolve, reject)=>{
             if(details.count==-1 && details.quantity==1){
                 db.get().collection(collection.CART_COL)
-                    .updateOne({_id:objectId(details.cart)},
-                    {$pull:{products:{item:objectId(details.product)}}}
+                    .updateOne({_id:new ObjectId(details.cart)},
+                    {$pull:{products:{item:new ObjectId(details.product)}}}
                     ).then((response)=>{resolve({removeProduct:true})})
             }else{
                 db.get().collection(collection.CART_COL)
-                    .updateOne({_id:objectId(details.cart), 'products.item':objectId(details.product)},
+                    .updateOne({_id:new ObjectId(details.cart), 'products.item':new ObjectId(details.product)},
                     {$inc:{'products.$.quantity':details.count}}
                     ).then((response)=>{resolve({status:true})})
                 }
@@ -110,7 +110,7 @@ module.exports = {
     getTotalAmount:(userId)=>{ //from getcartproduct
         return new Promise(async(resolve, reject)=>{
             let total = await db.get().collection(collection.CART_COL).aggregate([
-                {$match:{user:objectId(userId)}},
+                {$match:{user:new ObjectId(userId)}},
                 {$unwind:'$products'},
                 {$project:{item:'$products.item', quantity:'$products.quantity'}},
                 {$lookup:{from:collection.PRODUCT_COLLECTION, localField:'item', foreignField:'_id', as:'product'}},
@@ -132,7 +132,7 @@ module.exports = {
                     address:order.address, 
                     pincode:order.pincode
                 },
-                userId:objectId(order.userId),
+                userId:new ObjectId(order.userId),
                 paymentMethod:order['payment_method'],
                 product:prodList,
                 Amount:totalPrice,
@@ -141,14 +141,14 @@ module.exports = {
             }
             //console.log(orderObj)
             db.get().collection(collection.ORD_COL).insertOne(orderObj).then((response)=>{
-                db.get().collection(collection.CART_COL).deleteOne({user:objectId(order.userId)})
+                db.get().collection(collection.CART_COL).deleteOne({user:new ObjectId(order.userId)})
                 resolve(response.insertedId)
             })
         })
     },
     getCartProductlist:(userId)=>{
         return new Promise(async(resolve, reject)=>{
-            let cart = await db.get().collection(collection.CART_COL).findOne({user:objectId(userId)})
+            let cart = await db.get().collection(collection.CART_COL).findOne({user:new ObjectId(userId)})
                 //console.log(cart)
                 if(cart && cart.length > 0 && cart.products){resolve(cart.products)}
                 else{resolve()}
@@ -157,7 +157,7 @@ module.exports = {
     getUserOrd:(userId)=>{
         return new Promise(async(resolve, reject)=>{
             let orders = await db.get().collection(collection.ORD_COL)
-            .find({userId:objectId(userId)})
+            .find({userId:new ObjectId(userId)})
             .toArray()
             resolve(orders)
         })
@@ -165,7 +165,7 @@ module.exports = {
     getOrdProd:(orderId)=>{
         return new Promise(async(resolve, reject)=>{
             let orderItems = await db.get().collection(collection.ORD_COL).aggregate([
-                {$match:{_id:objectId(orderId)}},
+                {$match:{_id:new ObjectId(orderId)}},
                 {$unwind:'$products'},
                 {$project:{item:'$products.item', quantity:'$products.quantity'}},
                 {$lookup:{from:collection.PRODUCT_COLLECTION, localField:'item', foreignField:'_id', as:'product'}},
