@@ -20,7 +20,7 @@ module.exports.get = function(){
 // npm i mongodb@4.6.0  preferd
 
 const { MongoClient } = require('mongodb')
-const url = 'mongodb://localhost:27017/'
+const url = 'mongodb+srv://gokulbabu9278:nb%40gokul$9278@e-commerce.ntifb.mongodb.net/?retryWrites=true&w=majority&appName=E-Commerce'
 const client = new MongoClient(url)
 const dbname = 'shopping'
 
@@ -32,3 +32,4 @@ module.exports.connect = async function(){
 module.exports.get = function(){
     return state.db
 }
+//npm i mongodb@6.8.0
