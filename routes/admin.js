@@ -12,14 +12,14 @@ router.get('/',(req, res, next)=>{
 })
 
 router.get('/add_product', (req, res)=>{
-  res.render('admin/add_product')
+  res.render('admin/add_product', {admin:true})
 })
 
 router.post('/add_product', (req, res)=>{
   productHelper.addProduct(req.body, (id)=>{
     let image = req.files.Image
     image.mv('./public/product_image/'+id+'.jpg',(err)=>{
-      if(!err){res.render('admin/add_product')   
+      if(!err){res.render('admin/add_product', {admin:true})   
       }else{console.log(err)}})
   })
 })
