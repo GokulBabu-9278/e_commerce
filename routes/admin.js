@@ -2,7 +2,16 @@ var express = require('express');
 var router = express.Router();
 
 var productHelper = require('../helpers/product_helpers');
+var userHelper = require('../helpers/user_helpers')
 const { route } = require('./user');
+
+const verifyLogin = (req, res, next)=>{
+  if(req.session.admin.loggedIn){
+    next()
+  }else{
+    res.redirect('/login')
+  }
+}
 
 /* GET users listing. */
 router.get('/',(req, res, next)=>{
@@ -46,5 +55,36 @@ router.post('/edit_product/:id', (req, res)=>{
     }
   })
 })
-
+router.get('/login', (req, res)=>{
+  if(req.session.admin){
+    res.redirect('/')
+  }else{
+  res.render('admin/login', {"loginErr":req.session.adminloginErr})
+  req.session.adminloginErr = false
+  }
+})
+router.get('/signup', (req, res)=>{
+  res.render('admin/signup')
+})
+router.post('/signup', (req, res)=>{
+  productHelper.doSignup(req.body).then((response)=>{
+    console.log(response)
+    req.session.admin = response
+    req.session.adminloggedIn = true
+    res.redirect('/')
+  })
+  res.render('user/login')
+})
+router.post('/login',(req, res)=>{
+  productHelper.doLogin(req.body).then((response)=>{
+    if(response.status){
+      req.session.admin = response.user
+      req.session.adminloggedIn = true
+      res.redirect('/')
+    }else{
+      req.session.userloginErr = "invalid name or passowrd"
+      res.redirect('/login')
+    }
+  })
+})
 module.exports = router;
